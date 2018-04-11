@@ -6,9 +6,53 @@
       "id": "${info.app.name}",
       "version": "${info.app.minorVersion}",
       "handlers" : [
+        {
+          "methods": ["GET", "POST"],
+          "pathPattern": "/sas"
+        },{
+          "methods": ["GET", "PUT", "DELETE"],
+          "pathPattern": "/sas/{id}"
+        },{
+          "methods": ["GET"],
+          "pathPattern": "/sas/{id}/*"
+        },{
+          "methods": ["GET", "POST"],
+          "pathPattern": "/kbs"
+        },{
+          "methods": ["GET", "PUT", "DELETE"],
+          "pathPattern": "/kbs/{id}"
+        },{
+          "methods": ["GET"],
+          "pathPattern": "/kbs/{id}/*"
+        },{
+          "methods": ["GET", "POST"],
+          "pathPattern": "/packages"
+        },{
+          "methods": ["GET", "PUT", "DELETE"],
+          "pathPattern": "/packages/{id}"
+        },{
+          "methods": ["GET"],
+          "pathPattern": "/packages/{id}/*"
+        },{
+          "methods": ["GET", "POST"],
+          "pathPattern": "/content"
+        },{
+          "methods": ["GET", "PUT", "DELETE"],
+          "pathPattern": "/content/{id}"
+        },{
+          "methods": ["GET"],
+          "pathPattern": "/content/{id}/*"
+        }
       ]
-    },
-    {
+    },{
+      "id": "k-int_webtools",
+      "version": "1.0",
+      "interfaceType" : "multiple",
+      "handlers": [{
+        "methods": ["GET"],
+        "pathPattern": "/kiwt/*"
+      }]
+    },{
       "id": "_tenant",
       "version": "1.0",
       "interfaceType" : "system",
