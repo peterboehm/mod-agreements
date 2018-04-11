@@ -109,23 +109,22 @@ task generateDescriptors(type: Copy) {
 
   if(!(grailsBuildInfoFile)) return // No need to continue if the file is not there
 
-    doFirst {
+  doFirst {
 
-      // Place the loading within a do first as the info file from the buildProperties
-      // task will not be present until it is executed. This owuld cause a file not found
-      // during task configureation otherwise.
+    // Place the loading within a do first as the info file from the buildProperties
+    // task will not be present until it is executed. This owuld cause a file not found
+    // during task configureation otherwise.
+    Properties properties = new Properties()
 
-      Properties properties = new Properties()
-
-      // Read properties from the file
-      grailsBuildInfoFile.withInputStream {
-        properties.load(it)
-      }
-
-      // Need to parse multi-dimensional keys.
-      ConfigSlurper cs = new ConfigSlurper()
-      props.putAll(cs.parse(properties))
+    // Read properties from the file
+    grailsBuildInfoFile.withInputStream {
+      properties.load(it)
     }
+
+    // Need to parse multi-dimensional keys.
+    ConfigSlurper cs = new ConfigSlurper()
+    props.putAll(cs.parse(properties))
+  }
 
   from ('./src/okapi') {
     include '*-template.json'
@@ -200,8 +199,8 @@ processResources.dependsOn generateDescriptors
 
 // Changed this to enable inline development of the includes listed below.
 def includes = [
-  'web-toolkit'   :'com.k_int.grails:web-toolkit:3.3.2',
-  'grails-okapi'  :'com.k_int.okapi:grails-okapi:3.3.6'
+  'web-toolkit'   : 'com.k_int.grails:web-toolkit:3.3.2',
+  'grails-okapi'  : 'com.k_int.okapi:grails-okapi:3.3.6'
 ]
 
 includes?.each { String projectName, String mavenString ->
