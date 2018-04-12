@@ -77,6 +77,12 @@ dependencies {
 
 }
 
+// Changed this to enable inline development of the includes listed below.
+def includes = [
+  'web-toolkit'   : 'com.k_int.grails:web-toolkit:3.3.2',
+  'grails-okapi'  : 'com.k_int.okapi:grails-okapi:3.3.6'
+]
+
 bootRun {
   jvmArgs('-Dspring.output.ansi.enabled=always')
   addResources = true
@@ -196,12 +202,6 @@ buildProperties.doLast {
 
 processResources.dependsOn generateDescriptors
 //assemble.dependsOn generateDescriptors
-
-// Changed this to enable inline development of the includes listed below.
-def includes = [
-  'web-toolkit'   : 'com.k_int.grails:web-toolkit:3.3.2',
-  'grails-okapi'  : 'com.k_int.okapi:grails-okapi:3.3.6'
-]
 
 includes?.each { String projectName, String mavenString ->
   def igp = subprojects?.find {
