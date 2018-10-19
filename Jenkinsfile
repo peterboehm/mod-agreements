@@ -39,7 +39,7 @@ pipeline {
             }
             else {
               env.dockerRepo = 'folioci'
-              env.version = "${gradleVersion}-SNAPSHOT.${env.BUILD_NUMBER}
+              env.version = "${gradleVersion}-SNAPSHOT.${env.BUILD_NUMBER}"
             }
           }
         }
