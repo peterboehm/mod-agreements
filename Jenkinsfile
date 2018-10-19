@@ -28,6 +28,9 @@ pipeline {
             def foliociLib = new org.folio.foliociCommands()
             def gradleVersion = foliociLib.gradleProperty('appVersion')
 
+            // debug
+            echo "$gradleVersion
+
             env.name = env.ORG_GRADLE_PROJECT_appName
         
             // if release 
@@ -43,6 +46,12 @@ pipeline {
                 env.version = "${gradleVersion}-SNAPSHOT.${env.BUILD_NUMBER}"
               }
             }
+            // debug
+            echo "$gradleVersion"
+            echo "$env.dockerRepo"
+            
+
+
           }
         }
         sendNotifications 'STARTED'  
