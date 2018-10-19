@@ -4,7 +4,7 @@ pipeline {
 
   environment {
     ORG_GRADLE_PROJECT_appName = 'mod-erm'
-    GRADLE_OPTS = '--console plain --no-daemon'
+    GRADLEW_OPTS = '--console plain --no-daemon'
     BUILD_DIR = "${env.WORKSPACE}/service"
     MD = "${env.WORKSPACE}/service/build/resources/main/okapi/ModuleDescriptor.json"
   }
@@ -23,23 +23,25 @@ pipeline {
   stages {
     stage ('Setup') {
       steps {
-        script {
-          def foliociLib = new org.folio.foliociCommands()
-          def gradleVersion = foliociLib.gradleProperty('appVersion')
+        dir(env.BUILD_DIR) {
+          script {
+            def foliociLib = new org.folio.foliociCommands()
+            def gradleVersion = foliociLib.gradleProperty('appVersion')
 
-          env.name = env.ORG_GRADLE_PROJECT_appName
+            env.name = env.ORG_GRADLE_PROJECT_appName
         
-          // if release 
-          if ( foliociLib.isRelease() ) {
-            // make sure git tag and version match
-            if ( foliociLib.tagMatch(version) ) {
-              env.isRelease = true 
-              env.dockerRepo = 'folioorg'
-              env.version = gradleVersion
-            }
-            else {
-              env.dockerRepo = 'folioci'
-              env.version = "${gradleVersion}-SNAPSHOT.${env.BUILD_NUMBER}"
+            // if release 
+            if ( foliociLib.isRelease() ) {
+              // make sure git tag and version match
+              if ( foliociLib.tagMatch(version) ) {
+                env.isRelease = true 
+                env.dockerRepo = 'folioorg'
+                env.version = gradleVersion
+              }
+              else {
+                env.dockerRepo = 'folioci'
+                env.version = "${gradleVersion}-SNAPSHOT.${env.BUILD_NUMBER}"
+              }
             }
           }
         }
@@ -50,7 +52,7 @@ pipeline {
     stage('Gradle Build') { 
       steps {
         dir(env.BUILD_DIR) {
-          sh "./gradlew $env.GRADLE_OPTS -PappVersion=${env.version} assemble"
+          sh "./gradlew $env.GRADLEW_OPTS -PappVersion=${env.version} assemble"
         }
       }
     }
@@ -58,7 +60,7 @@ pipeline {
     stage('Build Docker') {
       steps {
         dir(env.BUILD_DIR) {
-          sh "./gradlew $env.GRADLE_OPTS -PappVersion=${env.version} -PdockerRepo=${env.dockerRepo} buildImage"
+          sh "./gradlew $env.GRADLEW_OPTS -PappVersion=${env.version} -PdockerRepo=${env.dockerRepo} buildImage"
         }
         // debug
         sh "cat $env.MD"
