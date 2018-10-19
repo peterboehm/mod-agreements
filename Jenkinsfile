@@ -46,10 +46,6 @@ pipeline {
               env.dockerRepo = 'folioci'
               env.version = "${gradleVersion}-SNAPSHOT.${env.BUILD_NUMBER}"
             }
-            // debug
-            echo "$env.version"
-            echo "$env.dockerRepo"
-
           }
         }
         sendNotifications 'STARTED'  
@@ -84,6 +80,7 @@ pipeline {
       steps {
         script {
           docker.withRegistry('https://index.docker.io/v1/', 'DockerHubIDJenkins') {
+            sh "docker tag ${env.dockerRepo}/${env.name}:${env.version} ${env.dockerRepo}/${env.name}:latest"
             sh "docker push ${env.dockerRepo}/${env.name}:${env.version}"
             sh "docker push ${env.dockerRepo}/${env.name}:latest"
           }
