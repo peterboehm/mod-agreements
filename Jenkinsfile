@@ -69,13 +69,15 @@ pipeline {
       when { 
         anyOf {
           branch 'master'
-          environment name: isRelease, value: true 
+          expression { return env.isRelease }
         }
       }
       steps {
-        docker.withRegistry('https://index.docker.io/v1/', 'DockerHubIDJenkins') {
-          sh "docker push ${env.dockerRepo}/${env.name}:${env.version}"
-          sh "docker push ${env.dockerRepo}/${env.name}:latest"
+        script {
+          docker.withRegistry('https://index.docker.io/v1/', 'DockerHubIDJenkins') {
+            sh "docker push ${env.dockerRepo}/${env.name}:${env.version}"
+            sh "docker push ${env.dockerRepo}/${env.name}:latest"
+          }
         }
       }
     }
@@ -84,7 +86,7 @@ pipeline {
       when {
         anyOf { 
           branch 'master'
-          environment name: isRelease, value: true
+          expression { return env.isRelease }
         }
       }
       steps {
