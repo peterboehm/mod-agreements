@@ -28,9 +28,6 @@ pipeline {
             def foliociLib = new org.folio.foliociCommands()
             def gradleVersion = foliociLib.gradleProperty('appVersion')
 
-            // debug
-            echo "$gradleVersion
-
             env.name = env.ORG_GRADLE_PROJECT_appName
         
             // if release 
