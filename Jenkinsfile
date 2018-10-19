@@ -50,7 +50,7 @@ pipeline {
     stage('Gradle Build') { 
       steps {
         dir(env.BUILD_DIR) {
-          sh "./gradlew $env.GRADLE_OPTS -PappVersion=${env.version} assemble
+          sh "./gradlew $env.GRADLE_OPTS -PappVersion=${env.version} assemble"
         }
       }
     }
