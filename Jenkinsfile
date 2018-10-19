@@ -38,16 +38,16 @@ pipeline {
                 env.dockerRepo = 'folioorg'
                 env.version = gradleVersion
               }
-              else {
-                env.dockerRepo = 'folioci'
-                env.version = "${gradleVersion}-SNAPSHOT.${env.BUILD_NUMBER}"
+              else { 
+                error('Git release tag and Maven version mismatch')
               }
+            else {
+              env.dockerRepo = 'folioci'
+              env.version = "${gradleVersion}-SNAPSHOT.${env.BUILD_NUMBER}"
             }
             // debug
-            echo "$gradleVersion"
+            echo "$env.version"
             echo "$env.dockerRepo"
-            
-
 
           }
         }
