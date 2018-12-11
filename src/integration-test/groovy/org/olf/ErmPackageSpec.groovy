@@ -1,8 +1,7 @@
 package org.olf
 
 import grails.testing.mixin.integration.Integration
-import grails.transaction.*
-import static grails.web.http.HttpHeaders.*
+
 import static org.springframework.http.HttpStatus.*
 import spock.lang.*
 import geb.spock.*
@@ -10,7 +9,6 @@ import grails.plugins.rest.client.RestBuilder
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.k_int.okapi.OkapiHeaders
-import spock.lang.Shared
 import groovy.json.JsonSlurper
 import grails.gorm.multitenancy.Tenants
 

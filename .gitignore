@@ -2,3 +2,7 @@
 !.gitignore
 !/.okapi
 .DS_Store
+!.editorconfig
+/bin
+/build
+/_settings.gradle

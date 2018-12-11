@@ -1,6 +1,6 @@
 package org.olf
 
-import static grails.web.http.HttpHeaders.*
+
 import static org.springframework.http.HttpStatus.*
 
 import org.olf.erm.SubscriptionAgreement
@@ -14,7 +14,6 @@ import geb.spock.*
 import grails.gorm.multitenancy.Tenants
 import grails.plugins.rest.client.RestBuilder
 import grails.testing.mixin.integration.Integration
-import grails.transaction.*
 import spock.lang.*
 
 @Integration
