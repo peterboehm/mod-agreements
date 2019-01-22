@@ -63,5 +63,6 @@ class UrlMappings {
       "/entitlementOptions" ( action:'entitlementOptions' )
       "/entitlements" ( action:'entitlements' )
     }
+	"/erm/export"(controller:'export', action:'index')
   }
 }
