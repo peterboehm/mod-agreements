@@ -101,7 +101,10 @@
         },{
           "methods": ["GET", "POST", "DELETE"],
           "pathPattern": "/erm/refdataValues/{domain}/{property}"
-        }
+        },{
+          "methods": ["GET"], 
+          "pathPattern": "/erm/export"
+        }  
       ]
     },{
       "id": "_tenant",
