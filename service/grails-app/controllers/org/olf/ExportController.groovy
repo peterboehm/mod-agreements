@@ -46,7 +46,7 @@ class ExportController {
 					// The block of code below will likely need extending to take different actions based on the instanceof the row
 					
 					items.each { row ->
-						writer.write("\"${row.name}\",\"Find the url\",\"find the identifier\"\n");
+						writer.write("\"${row.name}\",\"Find the url\",\"${row.id}\"\n");
 					}
 					writer.flush()
 					writer.close() 
