@@ -30,6 +30,7 @@ repositories {
   maven { url 'https://repo.grails.org/grails/core' }
   maven { url 'http://maven.k-int.com/content/repositories/releases' }
   maven { url 'http://maven.indexdata.com/' }
+  jcenter()
 
 }
 
@@ -69,6 +70,7 @@ dependencies {
   testCompile "org.grails:grails-datastore-rest-client"
   testCompile "org.grails:grails-web-testing-support"
   testCompile "org.grails.plugins:geb:1.1.2"
+  testCompile "org.mockito:mockito-core:2.+"
   testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:2.47.1"
   testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
   testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
