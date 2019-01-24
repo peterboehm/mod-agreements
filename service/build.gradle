@@ -281,5 +281,11 @@ task buildImage(type: DockerBuildImage, dependsOn: createDockerfile) {
   tag = dockerTag
 }
 
+test {
+  testLogging {
+    events "passed", "skipped", "failed", "standardOut", "standardError"
+  }
+}
+
 
 
