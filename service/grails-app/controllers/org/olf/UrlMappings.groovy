@@ -64,5 +64,6 @@ class UrlMappings {
       "/entitlements" ( action:'entitlements' )
     }
 	"/erm/export"(controller:'export', action:'index')
+	"/erm/export/kbart"(controller:'export', action:'kbartExport')
   }
 }

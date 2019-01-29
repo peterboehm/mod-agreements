@@ -104,6 +104,9 @@
         },{
           "methods": ["GET"], 
           "pathPattern": "/erm/export"
+        } ,{
+          "methods": ["GET"], 
+          "pathPattern": "/erm/export/kbart"
         }  
       ]
     },{

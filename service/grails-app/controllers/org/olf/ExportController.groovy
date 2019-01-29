@@ -11,8 +11,10 @@ import org.olf.kb.*
 
 class ExportController {
 	static responseFormats = ['json', 'xml']
+	String headline;
 	
 	def index() {
+		headline="name,uri,identifier\n";
 		// Declare a list of maps containing some test data
 		List some_test_data = [
 			[ title:'title-1', url:'url-1', identifier:'identifier-1' ], 
@@ -28,17 +30,16 @@ class ExportController {
 		// This is only half the story! We need to add extra restrictions so we only return resources for which we have
 		// a live entitlement that connects the resource to an agreement
 		}
-		
 		withFormat {
 			csv {
-				response.setHeader("Content-disposition", "attachment;filename=\"MyExportFilename.csv\"")
+				response.setHeader("Content-disposition", "attachment;filename=\"ExportFilename.csv\"")
 				response.contentType = "text/csv"
-				def out = response.outputStream 
-				out.withWriter { 
-					writer -> writer.write("name,uri,identifier\n")
+				def out = response.outputStream
+				out.withWriter {
+					writer -> writer.write(headline)
 				  /*some_test_data.each {
 					 row -> writer.write("\"${row.title}\",\"${row.url}\",\"${row.identifier}\"\n");
-				    }
+					}
 				 */
 					// The query above will give us a list of ErmResource objects. ErmResource is a superclass for
 					// PackageContentItem, Pkg, PlatformTitleInstance and TitleInstance and ErmResource has a name (Title)
@@ -49,7 +50,28 @@ class ExportController {
 						writer.write("\"${row.name}\",\"Find the url\",\"${row.id}\"\n");
 					}
 					writer.flush()
-					writer.close() 
+					writer.close()
+				}
+				out.flush()
+			}
+		}
+	}
+	
+	def kbartExport() {
+		//def result = [:]
+		//respond result
+		
+		headline="publication_title,print_identifier,online_identifier,date_first_issue_online,num_first_vol_online,num_first_issue_online,date_last_issue_online,num_last_vol_online,num_last_issue_online,title_url,first_author,title_id,embargo_info,coverage_depth,notes,publisher_name,publication_type,date_monograph_published_print,date_monograph_published_online,monograph_volume,monograph_edition,first_editor,parent_publication_id,preceding_publication_title_id,access_type\n";
+		
+		withFormat {
+			csv {
+				response.setHeader("Content-disposition", "attachment;filename=\"ExportFilename.csv\"")
+				response.contentType = "text/csv"
+				def out = response.outputStream
+				out.withWriter {
+					writer -> writer.write(headline)
+				 	writer.flush()
+					writer.close()
 				}
 				out.flush()
 			}
