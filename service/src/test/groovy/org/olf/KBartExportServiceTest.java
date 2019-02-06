@@ -6,7 +6,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.olf.erm.SubscriptionAgreement;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.olf.export.ExportConstants.KBART2_HEADER;
 
 public class KBartExportServiceTest {
 
@@ -25,9 +26,11 @@ public class KBartExportServiceTest {
     service = null;
   }
 
+
+  /** MODERM-23 - Scenario 1 */
   @Test
-  public void getActiveTitles() {
-    service.getActiveTitles();
-    assertTrue(true);
+  public void returnEmptyKBartHeader() {
+    String emptyKBartHeader = service.getTitlesInActiveAgreements();
+    assertEquals(KBART2_HEADER, emptyKBartHeader);
   }
 }
