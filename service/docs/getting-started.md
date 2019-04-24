@@ -63,7 +63,7 @@ vagrant up
 ```
 
 # Running the Application
-From the root of your grails project (olf-erm/service) you should be able to start the application by typing:
+From the root of your grails project (mod-agreements/service) you should be able to start the application by typing:
 ```grails run-app```
 
 The above command should start the application using the development profile. If you are using either the folio vagrant backend from this repo, or a more recent one,
@@ -128,7 +128,7 @@ You can run the jar using the script `scripts/run_self_reg.sh`.
 
 Alternatively, you can run the production jar with the following command:
 
-    java -jar build/libs/olf-erm-1.0.jar \
+    java -jar build/libs/mod-agreements-1.0.jar \
      --grails.server.host=10.0.2.2 \
      --okapi.service.host=localhost \
      --okapi.service.port=9130 \
@@ -152,7 +152,7 @@ settings for the supplied vagrant instance of postgres, you can do the following
 
 This will default to the settings for the "vagrant-db" profile and thus make the run command:
 
-    java -jar build/libs/olf-erm-1.0.jar
+    java -jar build/libs/mod-agreements-1.0.jar
 
 
 Notice the lack of variables needed. This is because they are automatically set in the file `service/grails-app/conf/application-vagrant-db.yml
