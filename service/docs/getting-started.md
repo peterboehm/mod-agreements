@@ -69,11 +69,11 @@ From the root of your grails project (mod-agreements/service) you should be able
 The above command should start the application using the development profile. If you are using either the folio vagrant backend from this repo, or a more recent one,
 the app should try and automatically register itself as an okapi module and also register the deployment with the service. You should see console output like the following:
 ```
-INFO --- [           main] com.k_int.okapi.OkapiClient              : Success: Got response [id:olf-erm-1.0.0, name:olf-erm, ...
+INFO --- [           main] com.k_int.okapi.OkapiClient              : Success: Got response [id:mod-agreements-1.0.0, name:mod-agreements, ...
 
 ...
 
-INFO --- [           main] com.k_int.okapi.OkapiClient              : Success: Got response [instId:10.0.2.2, srvcId:olf-erm-1.0.0, url:http://10.0.2.2:8080/]
+INFO --- [           main] com.k_int.okapi.OkapiClient              : Success: Got response [instId:10.0.2.2, srvcId:mod-agreements-1.0.0, url:http://10.0.2.2:8080/]
 ```
 
 For the above to work the app needs to know where to find OKAPI. These are both defined in the development profile section of the application settings file located at
