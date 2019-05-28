@@ -68,7 +68,7 @@ public class SubscriptionAgreement implements MultiTenant<SubscriptionAgreement>
                    orgs: SubscriptionAgreementOrg,
     externalLicenseDocs: DocumentAttachment,
                    docs: DocumentAttachment,
-         linkedLicenses: RemoteLicenseLink
+         linkedLicenses: RemoteLicenseLink,
       supplementaryDocs: DocumentAttachment
   ]
 
