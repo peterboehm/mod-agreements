@@ -6,6 +6,7 @@ import org.olf.kb.Platform
 import org.olf.kb.PlatformTitleInstance
 import org.olf.kb.RemoteKB
 import org.olf.kb.TitleInstance
+import org.olf.general.EventLog
 
 import grails.gorm.transactions.Transactional
 import groovy.util.logging.Slf4j
@@ -156,6 +157,12 @@ public class PackageIngestService {
                 else {
                   // Note that we have seen the package content item now - so we don't delete it at the end.
                   log.debug("[${result.titleCount}] update package content item (${pci.id}) set last seen to ${result.updateTime}")
+                  new EventLog(
+                    message: "Package content item created",
+                    timestamp: LocalDateTime.now(),
+                    recordId: pci.id,
+                    recordData: null
+                  ).save(flush:true, failOnError:false)
                   pci.lastSeenTimestamp = result.updateTime
                   // TODO: Check for and record any CHANGES to this title in this package (coverage, embargo, etc)
                 }
@@ -182,6 +189,13 @@ public class PackageIngestService {
               }
             }
             catch ( Exception e ) {
+              new EventLog(
+                message: "Error creating package content item" + e.getMessage(),
+                timestamp: LocalDateTime.now(),
+                recordId: null,
+                recordData: null
+                ).save(flush: true, failOnError:false)
+
               log.error("[${result.titleCount}] problem",e)
             }
           }
@@ -191,6 +205,12 @@ public class PackageIngestService {
         }
       }
       catch ( Exception e ) {
+        new EventLog(
+          message: "Error loading package: " + e.getMessage(),
+          timestamp: LocalDateTime.now(),
+          recordId: null,
+          recordData: null
+        ).save(flush: true, failOnError:false)
         log.error("Problem with line ${pc} in package load. Ignoring this row",e)
       }
 
