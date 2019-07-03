@@ -48,8 +48,7 @@ class KbHarvestService {
     Tenants.withId(schemaName, this.&triggerCacheUpdate) 
   }
 
-  //@Scheduled(fixedDelay = 3600000L, initialDelay = 3600000L) // Run task every hour
-  @Scheduled(fixedDelay = 300000L, initialDelay = 20000L) // Run every 5 mins
+  @Scheduled(fixedDelay = 3600000L, initialDelay = 3600000L) // Run task every hour
   void triggerSync() {
     log.debug "Running scheduled KB sync for all tenants :{}", new SimpleDateFormat("dd/M/yyyy hh:mm:ss").format(new Date())
 
