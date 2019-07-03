@@ -33,6 +33,14 @@ public class PackageIngestService {
   // looking up an Org in vendors and stashing the vendor info in the local cache table.
   DependentModuleProxyService dependentModuleProxyService
 
+  private void logEvent(String message, String detail) {
+    new EventLog( 
+      message: message, 
+      detail: detail,
+      origin: this.getClass().getSimpleName()
+    ).save(flush: true, failOnError:false)
+  }
+
   public Map upsertPackage(Map package_data) {
     return upsertPackage(package_data,'LOCAL')
   }
@@ -157,12 +165,6 @@ public class PackageIngestService {
                 else {
                   // Note that we have seen the package content item now - so we don't delete it at the end.
                   log.debug("[${result.titleCount}] update package content item (${pci.id}) set last seen to ${result.updateTime}")
-                  new EventLog(
-                    message: "Package content item created",
-                    timestamp: LocalDateTime.now(),
-                    recordId: pci.id,
-                    recordData: null
-                  ).save(flush:true, failOnError:false)
                   pci.lastSeenTimestamp = result.updateTime
                   // TODO: Check for and record any CHANGES to this title in this package (coverage, embargo, etc)
                 }
@@ -185,18 +187,15 @@ public class PackageIngestService {
                 pci.save(flush:true, failOnError:true)
               }
               else {
-                log.error("[${result.titleCount}] unable to identify platform for package content item :: ${platform_url_to_use}, ${pc.platformName}")
+                String message = "[${result.titleCount}] unable to identify platform for package content item :: ${platform_url_to_use}, ${pc.platformName}"
+                log.error(message)
+                logEvent(message, null)
               }
             }
             catch ( Exception e ) {
-              new EventLog(
-                message: "Error creating package content item" + e.getMessage(),
-                timestamp: LocalDateTime.now(),
-                recordId: null,
-                recordData: null
-                ).save(flush: true, failOnError:false)
-
-              log.error("[${result.titleCount}] problem",e)
+              String message = "[${result.titleCount}] problem"
+              log.error(message,e)
+              logEvent(message, e.getMessage())
             }
           }
           else {
@@ -205,13 +204,9 @@ public class PackageIngestService {
         }
       }
       catch ( Exception e ) {
-        new EventLog(
-          message: "Error loading package: " + e.getMessage(),
-          timestamp: LocalDateTime.now(),
-          recordId: null,
-          recordData: null
-        ).save(flush: true, failOnError:false)
-        log.error("Problem with line ${pc} in package load. Ignoring this row",e)
+        String message = "Problem with line ${pc} in package load. Ignoring this row"
+        logEvent(message, e.getMessage())
+        log.error(message,e)
       }
 
       // {

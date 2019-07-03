@@ -7,22 +7,22 @@ import com.k_int.web.toolkit.refdata.Defaults
 class EventLog implements MultiTenant<EventLog> {
   String id
   String message
-  Date timestamp
-  String recordId
-  String recordData
+  Date dateCreated
+  String origin
+  String detail
 
   static mapping = {
-            id column: 'el_id', generator: 'uuid2', length:36
-       message column: 'el_message'
-     timestamp column: 'el_timestamp'
-      recordId column: 'el_record_id'
-    recordData column: 'el_record_data'
+              id column: 'el_id', generator: 'uuid2', length:36
+         message column: 'el_message'
+     dateCreated column: 'el_datecreated'
+          origin column: 'el_origin'
+          detail column: 'el_detail'
   }
   static constraints = {
-       message(nullable:true, blank:false)
-     timestamp(nullable:true, blank:false)
-      recordId(nullable:true, blank:false)
-    recordData(nullable:true, blank:false)
+         message(nullable:true, blank:false)
+     dateCreated(nullable:true, blank:false)
+          origin(nullable:true, blank:false)
+          detail(nullable:true, blank:false)
   }
 }
 
