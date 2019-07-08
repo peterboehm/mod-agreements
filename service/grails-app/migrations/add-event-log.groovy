@@ -1,8 +1,8 @@
 
 databaseChangeLog = {
-    changeSet(author: "kurt", id: "2019-06-17-0001") {
-        createTable(tableName: "event_log") {
-            column(name: "el_id", type: "VARCHAR(36)") {
+    changeSet(author: "kurt", id: "2019-07-08-0001") {
+        createTable(tableName: "log") {
+            column(name: "log_id", type: "VARCHAR(36)") {
                 constraints(nullable: "false")
             }
 
@@ -10,19 +10,19 @@ databaseChangeLog = {
                 constraints(nullable: "false")
             }
 
-            column(name: "el_message", type: "VARCHAR(255)")
+            column(name: "log_message", type: "VARCHAR(255)")
 
-            column(name: "el_record_id", type: "VARCHAR(255)")
+            column(name: "log_origin", type: "VARCHAR(255)")
 
-            column(name: "el_timestamp", type: "timestamp")
+            column(name: "log_datecreated", type: "timestamp")
 
-            column(name: "el_record_data", type: "VARCHAR(255)")
+            column(name: "log_detail", type: "VARCHAR(255)")
         }
 
     }
 
-    changeSet(author: "kurt", id: "2019-06-17-0002") {
-        addPrimaryKey(columnNames: "el_id", constraintName: "event_logPK", tableName: "event_log")
+    changeSet(author: "kurt", id: "2019-07-08-0002") {
+        addPrimaryKey(columnNames: "log_id", constraintName: "logPK", tableName: "log")
     }
 
 }

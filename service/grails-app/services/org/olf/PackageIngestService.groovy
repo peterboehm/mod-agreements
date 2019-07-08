@@ -6,7 +6,7 @@ import org.olf.kb.Platform
 import org.olf.kb.PlatformTitleInstance
 import org.olf.kb.RemoteKB
 import org.olf.kb.TitleInstance
-import org.olf.general.EventLog
+import org.olf.general.Log
 
 import grails.gorm.transactions.Transactional
 import groovy.util.logging.Slf4j
@@ -34,7 +34,7 @@ public class PackageIngestService {
   DependentModuleProxyService dependentModuleProxyService
 
   private void logEvent(String message, String detail) {
-    new EventLog( 
+    new Log( 
       message: message, 
       detail: detail,
       origin: this.getClass().getSimpleName()
