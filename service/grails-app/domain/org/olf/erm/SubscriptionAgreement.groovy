@@ -24,8 +24,8 @@ public class SubscriptionAgreement implements MultiTenant<SubscriptionAgreement>
   String vendorReference
   String attachedLicenceId
   String licenseNote
-  String linkedUdpId
-  String udpNote
+  String usageDataProviderId
+  String usageDataProviderNote
   LocalDate cancellationDeadline
   LocalDate startDate
   LocalDate endDate
@@ -107,8 +107,8 @@ public class SubscriptionAgreement implements MultiTenant<SubscriptionAgreement>
                   vendor column:'sa_vendor_fk'
        attachedLicenceId column:'sa_licence_fk'
 	   		 licenseNote column:'sa_license_note'
-			 linkedUdpId column:'sa_udp_fk'
-		         udpNote column:'sa_udp_note'
+     usageDataProviderId column:'sa_udp_fk'
+   usageDataProviderNote column:'sa_udp_note'
                   items cascade: 'all-delete-orphan'
                contacts cascade: 'all-delete-orphan'
             historyLines cascade: 'all-delete-orphan'
@@ -139,8 +139,8 @@ public class SubscriptionAgreement implements MultiTenant<SubscriptionAgreement>
                   vendor(nullable:true, blank:false)
        attachedLicenceId(nullable:true, blank:false)
 	   		 licenseNote(nullable:true, blank:false)
-			 linkedUdpId(nullable:true, blank:false)
-			   	 udpNote(nullable:true, blank:false)
+     usageDataProviderId(nullable:true, blank:false)
+   usageDataProviderNote(nullable:true, blank:false)
               
           linkedLicenses(validator: { Collection<RemoteLicenseLink> license_links ->
             
