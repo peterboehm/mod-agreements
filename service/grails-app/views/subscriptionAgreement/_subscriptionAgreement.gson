@@ -29,11 +29,14 @@ final def should_expand = [
   'docs',
   'supplementaryDocs',
   'vendor',
-  'tags',
-  'usageDataProviders'
+  'tags'
 ]
 if (params.controller != 'remoteLicenseLink' ) {
   should_expand << 'linkedLicenses'
+}
+
+if (params.controller != 'usageDataProvider' ) {
+  should_expand << 'usageDataProviders'
 }
 
 json g.render(subscriptionAgreement, [expand: should_expand])
