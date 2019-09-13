@@ -36,7 +36,7 @@ import java.util.TimeZone;
 
 
 /**
- * An adapter to go betweent the GOKb OAI service, for example the one at 
+ * An adapter to go between the GOKb OAI service, for example the one at
  *   https://gokbt.gbv.de/gokb/oai/index/packages?verb=ListRecords&metadataPrefix=gokb
  * and our internal KBCache implementation.
  */
@@ -71,7 +71,7 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
 
     while ( found_records ) {
 
- 
+
       log.debug("** GET https://gokbt.gbv.de/gokb/oai/index/packages ${query_params}");
 
       jpf_api.request(Method.GET) { req ->
@@ -120,7 +120,7 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
 
 
   private Map processPage(String cursor, Object oai_page, String source_name, KBCache cache) {
-    
+
     final SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
     // Force the formatter to use UCT because we want "Z" as the timezone
@@ -128,7 +128,7 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
 
     def result = [:]
 
-    
+
     // If there is no cursor, initialise it to an empty string.
     result.new_cursor = (cursor && cursor.trim()) != '' ? cursor : '';
     result.count = 0;
@@ -184,8 +184,8 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
       def package_name = package_record.name?.text()
       def package_shortcode = package_record.shortcode?.text()
       def nominal_provider = package_record.nominalProvider?.name?.text()
-  
-  
+
+
       result = [
         header:[
           status: xml_gokb_record?.header?.status?.text(),
@@ -201,13 +201,13 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
         ],
         packageContents: []
       ]
-  
+
       package_record.TIPPs?.TIPP.each { tipp_entry ->
 
         def tipp_title = tipp_entry?.title?.name?.text()
         def tipp_medium = tipp_entry?.medium?.text()
         def tipp_media = null;
-        
+
         // It appears that tipp_entry?.title?.type?.value() can be a list
         String title_type = tipp_entry?.title?.type?.text()
 
@@ -240,7 +240,7 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
         // Our domain model does not allow blank startDate or endDate, but they can be null
         String start_date_string = tipp_entry.coverage?.@startDate?.toString()
         String end_date_string = tipp_entry.coverage?.@endDate?.toString()
- 
+
         tipp_coverage.add(["startVolume": tipp_entry.coverage?.@startVolume?.toString(),
                            "startIssue": tipp_entry.coverage?.@startIssue?.toString(),
                            "startDate": start_date_string?.length() > 0 ? start_date_string : null,
@@ -254,6 +254,9 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
         def tipp_url = tipp_entry.url?.text()
         def tipp_platform_url = tipp_entry.platform?.primaryUrl?.text()
         def tipp_platform_name = tipp_entry.platform?.name?.text()
+
+        String access_start = tipp_entry.access?.@start?.toString()
+        String access_end = tipp_entry.access?.@end?.toString()
 
         // log.debug("consider tipp ${tipp_title}");
 
@@ -269,14 +272,16 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
           "coverageNote": tipp_coverage_note,
           "platformUrl": tipp_platform_url,
           "platformName": tipp_platform_name,
-          "url": tipp_url
+          "url": tipp_url,
+          "access_start": access_start,
+          "access_end": access_end
         ])
       }
     }
     else {
       throw new RuntimeException("Problem decoding package record: ${package_record}");
     }
-    
+
     InternalPackageImpl pkg = new InternalPackageImpl()
     BindingResult binding = bindData (pkg, result)
     if (binding?.hasErrors()) {

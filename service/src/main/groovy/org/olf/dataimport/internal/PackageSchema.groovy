@@ -8,12 +8,12 @@ import groovy.transform.CompileStatic
 
 @CompileStatic
 interface PackageSchema extends Validateable {
-  
+
   PackageHeaderSchema getHeader()
   Collection<ContentItemSchema> getPackageContents()
   Errors getErrors()
   boolean validate()
-  
+
   @CompileStatic
   public interface PackageHeaderSchema extends Validateable {
     /*
@@ -30,7 +30,7 @@ interface PackageSchema extends Validateable {
     "packageSlug": "kint_test_001",
     "_intenalId": 276432871386
     */
-    
+
     PackageProviderSchema getPackageProvider()
     String getPackageSource()
     String getPackageName()
@@ -40,13 +40,13 @@ interface PackageSchema extends Validateable {
     String getStatus()
     String get_intenalId()
   }
-  
+
   @CompileStatic
   public interface PackageProviderSchema extends Validateable {
     String getName()
     String getReference()
   }
-  
+
   @CompileStatic
   public interface ContentItemSchema extends Validateable {
     /*
@@ -88,7 +88,7 @@ interface PackageSchema extends Validateable {
       "_platformId": 627
     }
     */
-    
+
     String getTitle()
     String getInstanceMedium()
     String getInstanceMedia()
@@ -102,8 +102,10 @@ interface PackageSchema extends Validateable {
     String getUrl()
     String getPlatformName()
     String get_platformId()
+    LocalDate getAccessStart()
+    LocalDate getAccessEnd()
   }
-  
+
   @CompileStatic
   public interface IdentifierSchema extends Validateable {
     /*
@@ -115,7 +117,7 @@ interface PackageSchema extends Validateable {
     String getNamespace()
     String getValue()
   }
-  
+
   @CompileStatic
   public interface CoverageStatementSchema extends Validateable {
     /*
@@ -131,7 +133,7 @@ interface PackageSchema extends Validateable {
     LocalDate getStartDate()
     String getStartVolume()
     String getStartIssue()
-    
+
     LocalDate getEndDate()
     String getEndVolume()
     String getEndIssue()

@@ -67,7 +67,7 @@ class PackageIngestService {
 
 
       result.updateTime = System.currentTimeMillis()
-  
+
       log.info("Package header: ${package_data.header} - update start time is ${result.updateTime}")
 
       // header.packageSlug contains the package maintainers authoritative identifier for this package.
@@ -106,11 +106,11 @@ class PackageIngestService {
           // resolve may return null, used to throw exception which causes the whole package to be rejected. Needs
           // discussion to work out best way to handle.
           TitleInstance title = titleInstanceResolverService.resolve(pc)
-  
+
           if ( title != null ) {
-  
+
             // log.debug("platform ${pc.platformUrl} ${pc.platformName} (item URL is ${pc.url})")
-  
+
             // lets try and work out the platform for the item
             def platform_url_to_use = pc.platformUrl
 
@@ -152,8 +152,8 @@ class PackageIngestService {
                     pkg:Pkg.get(result.packageId),
                     note:(pc.coverageNote) ? pc.coverageNote : null,
                     depth:(pc.coverageDepth) ? pc.coverageDepth : null,
-                    accessStart:null,
-                    accessEnd:null,
+                    accessStart:(pc.accessStart) ? pc.accessStart : null,
+                    accessEnd:(pc.accessEnd) ? pc.accessEnd : null,
                     addedTimestamp:result.updateTime,
                     lastSeenTimestamp:result.updateTime).save(flush:true, failOnError:true)
               }
@@ -177,7 +177,7 @@ class PackageIngestService {
                 coverageService.extend(pci, cov)
                 coverageService.extend(title, cov)
               }
-  
+
               // Save needed either way
               pci.save(flush:true, failOnError:true)
             }
@@ -233,9 +233,9 @@ class PackageIngestService {
     // this is how we detect deletions in the package file.
     log.debug("Remove any content items that have disappeared since the last upload. ${pkg.name}/${pkg.source}/${pkg.reference}/${result.updateTime}")
     int removal_counter = 0
-    
+
     PackageContentItem.withNewTransaction { status ->
-      
+
       PackageContentItem.executeQuery('select pci from PackageContentItem as pci where pci.pkg = :pkg and pci.lastSeenTimestamp < :updateTime',
                                       [pkg:pkg, updateTime:result.updateTime]).each { removal_candidate ->
         try {
@@ -249,7 +249,7 @@ class PackageIngestService {
       }
       result.numTitlesRemoved = removal_counter
     }
-    
+
     if (removal_counter > 0) {
       log.info("Removed ${removal_counter} items successfully")
     } else {
