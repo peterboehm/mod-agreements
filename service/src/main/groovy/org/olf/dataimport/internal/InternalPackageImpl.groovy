@@ -13,7 +13,7 @@ import groovy.transform.ToString
 class InternalPackageImpl implements PackageSchema, Validateable {
   HeaderImpl header
   List<PackageContentImpl> packageContents = []
-
+  
   @ToString(includePackage=false)
   @GrailsCompileStatic
   class HeaderImpl implements PackageHeaderSchema, Validateable {
@@ -25,19 +25,19 @@ class InternalPackageImpl implements PackageSchema, Validateable {
     LocalDate endDate
     String packageSlug
     String _intenalId
-
+    
     static constraints = {
       packageSource   nullable: false, blank: false
       packageSlug     nullable: false, blank: false
       packageName     nullable: false, blank: false
     }
   }
-
-
+  
+  
   @ToString(includePackage=false)
   @GrailsCompileStatic
   class PackageContentImpl implements ContentItemSchema, Validateable {
-
+    
     List<Identifier> instanceIdentifiers
     List<Identifier> siblingInstanceIdentifiers
     List<CoverageStatement> coverage
@@ -54,11 +54,11 @@ class InternalPackageImpl implements PackageSchema, Validateable {
     LocalDate accessStart
     LocalDate accessEnd
   }
-
+  
   static constraints = {
     header            nullable: false
     packageContents   minSize: 1
-
+    
     platformName nullable:true, blank:false
     platformUrl  blank:false, validator: { String platformUrl, PackageContentImpl instance ->
       if (!platformUrl && !instance.platformName) {
