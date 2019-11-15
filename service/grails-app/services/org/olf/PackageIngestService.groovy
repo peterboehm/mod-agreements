@@ -305,8 +305,8 @@ class PackageIngestService {
       log.info ("Updated ${result.updatedTitles} titles")
       TimeUnit.MILLISECONDS.sleep(1)
       log.info ("Removed ${result.removedTitles} titles")
-      log.info ("Updated accessStart on ${result.updatedAccessStart} titles")
-      log.info ("Updated accessEnd on ${result.updatedAccessEnd} titles")
+      log.info ("Updated accessStart on ${result.updatedAccessStart} title(s)")
+      log.info ("Updated accessEnd on ${result.updatedAccessEnd} title(s)")
       
       // Log the counts too.
       for (final String change : countChanges) {
