@@ -60,7 +60,9 @@ class PackageIngestService {
       titleCount: 0,
       newTitles: 0,
       removedTitles: 0,
-      updatedTitles: 0
+      updatedTitles: 0,
+      updatedAccessStart: 0,
+      updatedAccessEnd: 0
     ]
 
     Pkg pkg = null
@@ -184,6 +186,12 @@ class PackageIngestService {
                   // Grab the dirty properties
                   def modifiedFieldNames = pci.getDirtyPropertyNames()
                   for (fieldName in modifiedFieldNames) {
+                    if (fieldName == "accessStart") {
+                      result.updatedAccessStart++
+                    }
+                    if (fieldName == "accessEnd") {
+                      result.updatedAccessEnd++
+                    }
                     if (countChanges.contains(fieldName)) {
                       def currentValue = pci."$fieldName"
                       def originalValue = pci.getPersistentValue(fieldName)
@@ -198,7 +206,7 @@ class PackageIngestService {
                   result.newTitles++
                 }
               }
-                
+              
               pci.save(flush: true, failOnError: true)
             
 
@@ -297,6 +305,8 @@ class PackageIngestService {
       log.info ("Updated ${result.updatedTitles} titles")
       TimeUnit.MILLISECONDS.sleep(1)
       log.info ("Removed ${result.removedTitles} titles")
+      log.info ("Updated accessStart on ${result.updatedAccessStart} titles")
+      log.info ("Updated accessEnd on ${result.updatedAccessEnd} titles")
       
       // Log the counts too.
       for (final String change : countChanges) {
