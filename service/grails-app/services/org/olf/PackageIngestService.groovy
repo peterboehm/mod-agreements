@@ -179,7 +179,18 @@ class PackageIngestService {
                 addedTimestamp = result.updateTime
                 lastSeenTimestamp = result.updateTime
               }
-              
+
+              // ensure that accessStart is earlier than accessEnd, otherwise stop processing the current item
+              if (pci.accessStart != null && pci.accessEnd != null) {
+                try {
+                  assert pci.accessStart < pci.accessEnd
+                }
+                catch (AssertionError ignored) {
+                  log.error("accessStart date cannot be after accessEnd date for title: ${title} in package: ${pkg.name}")
+                  return
+                }
+              }
+
               if (isUpdate) {
                 if (pci.isDirty()) {
                   // This means we have changes to an existing PCI and not a new one.
