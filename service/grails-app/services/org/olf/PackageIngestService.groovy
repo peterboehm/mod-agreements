@@ -182,8 +182,9 @@ class PackageIngestService {
 
               // ensure that accessStart is earlier than accessEnd, otherwise stop processing the current item
               if (pci.accessStart != null && pci.accessEnd != null) {
-                try {
-                  assert pci.accessStart < pci.accessEnd
+                if (pci.accessStart > pci.accessEnd ) {
+                  log.error("accessStart date cannot be after accessEnd date for title: ${title} in package: ${pkg.name}")
+                  return
                 }
                 catch (AssertionError ignored) {
                   log.error("accessStart date cannot be after accessEnd date for title: ${title} in package: ${pkg.name}")
