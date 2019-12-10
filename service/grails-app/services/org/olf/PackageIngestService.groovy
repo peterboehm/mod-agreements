@@ -219,7 +219,7 @@ class PackageIngestService {
                 // New item.
                 result.newTitles++
               }
-              
+
               pci.save(flush: true, failOnError: true)
 
               // If the row has a coverage statement, check that the range of coverage we know about for this title on this platform
