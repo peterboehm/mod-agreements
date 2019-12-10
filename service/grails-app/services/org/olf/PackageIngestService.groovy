@@ -186,10 +186,6 @@ class PackageIngestService {
                   log.error("accessStart date cannot be after accessEnd date for title: ${title} in package: ${pkg.name}")
                   return
                 }
-                catch (AssertionError ignored) {
-                  log.error("accessStart date cannot be after accessEnd date for title: ${title} in package: ${pkg.name}")
-                  return
-                }
               }
 
               if (isUpdate) {
