@@ -31,6 +31,8 @@ public class RemoteKB implements MultiTenant<RemoteKB> {
 
   public static final Long RECTYPE_PACKAGE = new Long(1);
 
+  // Mark KB as protected/readonly, e.g. the LOCAL KB
+  Boolean readonly
   // Harvesting role
   /** Does this remote KB support harvesting */
   Boolean supportsHarvesting
@@ -83,6 +85,18 @@ public class RemoteKB implements MultiTenant<RemoteKB> {
 
   public String toString() {
     return "RemoteKB ${name} - ${type}/${uri}/${cursor}".toString()
+  }
+
+  def beforeUpdate() {
+    if (this.readonly == TRUE) {
+      return FALSE
+    }
+  }
+
+  def beforeDelete() {
+    if (this.readonly == TRUE) {
+      return FALSE
+    }
   }
 
 }
