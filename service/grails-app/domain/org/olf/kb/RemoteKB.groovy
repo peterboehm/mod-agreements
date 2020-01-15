@@ -7,7 +7,7 @@ import grails.gorm.MultiTenant
  * use of a repository of facts used to drive an inference engine, and the problem space being
  * "Can I access Volume 1 Issue 5 of X on platform Y". The idea was that instead of storring individual issue records (Or article records)
  * a KB would infer from coverage if a user had access to a particular desired content item.
- * 
+ *
  * In this context a "RemoteKB" is any repository that makes assertions about titles, platforms, packages and coverage. We also extend
  * this model to include the concept of "Activation" - recording in a KB that we have "Switched on" a particular content item. Recording
  * activation is separate to "Why" we activated something - We may have several agreements that entitle us to access Vol 1 Issue 1 - present of
@@ -18,7 +18,7 @@ public class RemoteKB implements MultiTenant<RemoteKB> {
 
   String id
   String name
-  String type // this is the name of a spring bean which will act 
+  String type // this is the name of a spring bean which will act
   String cursor // This may be a datetimestring, transaction or other service specific means of determining where we are up to
   String uri
   String listPrefix
@@ -63,6 +63,7 @@ public class RemoteKB implements MultiTenant<RemoteKB> {
     activationSupported column:'rkb_activation_supported'
              syncStatus column:'rkb_sync_status'
               lastCheck column:'rkb_last_check'
+               readonly column:'rkb_readonly'
   }
 
   static constraints = {
@@ -80,6 +81,7 @@ public class RemoteKB implements MultiTenant<RemoteKB> {
     activationSupported(nullable:true, blank:false)
              syncStatus(nullable:true, blank:false)
               lastCheck(nullable:true, blank:false)
+               readonly(nullable:true, blank:false)
   }
 
 
