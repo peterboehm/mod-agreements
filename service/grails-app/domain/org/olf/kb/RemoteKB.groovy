@@ -90,14 +90,16 @@ public class RemoteKB implements MultiTenant<RemoteKB> {
   }
 
   def beforeUpdate() {
-    if (this.readonly == TRUE) {
-      return FALSE
+    if (this.readonly == true) {
+      log.debug("Denying to update KB ${this.id} / ${this.name} because 'readonly' is set to TRUE")
+      return false
     }
   }
 
   def beforeDelete() {
-    if (this.readonly == TRUE) {
-      return FALSE
+    if (this.readonly == true) {
+      log.debug("Denying to delete KB ${this.id} / ${this.name} because 'readonly' is set to TRUE")
+      return false
     }
   }
 
