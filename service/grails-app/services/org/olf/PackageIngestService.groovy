@@ -73,7 +73,7 @@ class PackageIngestService {
       RemoteKB kb = RemoteKB.findByName(remotekbname) ?: new RemoteKB( name:remotekbname,
                                                                        rectype: new Long(1),
                                                                        active:Boolean.TRUE,
-                                                                       readOnly:Boolean.FALSE).save(flush:true, failOnError:true)
+                                                                       readOnly:readOnly).save(flush:true, failOnError:true)
 
 
       result.updateTime = System.currentTimeMillis()
