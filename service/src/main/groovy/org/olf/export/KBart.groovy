@@ -224,6 +224,22 @@ public class KBart implements Serializable {
         if (pci.depth) kbart.coverage_depth = pci.depth
         if (pci.note) kbart.notes = pci.note
         if (pti.url) kbart.title_url = pti.url
+//        if (ti.monographVolume) kbart.monograph_volume = ti.monographVolume
+//        log.debug("DEBUG: Setting monograph_volume: ${ti.monographVolume}")
+//        if (ti.monographEdition) kbart.monograph_edition = ti.monographEdition
+//        log.debug("DEBUG: Setting monograph_edition: ${ti.monographEdition}")
+//        if (ti.firstAuthor) kbart.first_author = ti.firstAuthor
+//        log.debug("DEBUG: Setting first_author: ${ti.firstAuthor}")
+//        if (ti.firstEditor) kbart.first_editor = ti.firstEditor
+//        log.debug("DEBUG: Setting first_editor: ${ti.firstEditor}")
+//        if (ti.subType == "Print" && ti.dateMonographPublished) {
+//          log.debug("DEBUG: subType==Print; Setting date_monograph_published_print: ${ti.dateMonographPublished}")
+//          kbart.date_monograph_published_print = ti.dateMonographPublished
+//        }
+//        else if (ti.subType == "Electronic" && ti.dateMonographPublished) {
+//          kbart.date_monograph_published_online = ti.dateMonographPublished
+//          log.debug("DEBUG: subType==Electronic; Setting date_monograph_published_online: ${ti.dateMonographPublished}")
+//        }
 
         Object identifiers_obj = ti.identifiers
         if (identifiers_obj) {
@@ -281,4 +297,3 @@ public class KBart implements Serializable {
     return kbartList
   }
 }
-
