@@ -123,15 +123,22 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
       def record_identifier = record?.header?.identifier?.text()
       def package_name = record?.metadata?.gokb?.package?.name?.text()
       def datestamp = record?.header?.datestamp?.text()
+      def editStatus = record?.metadata?.gokb?.package?.editStatus?.text()
+      def listStatus = record?.metadata?.gokb?.package?.listStatus?.text()
 
       log.debug("Processing OAI record :: ${result.count} ${record_identifier} ${package_name}")
 
       PackageSchema json_package_description = gokbToERM(record)
       if ( json_package_description.header.status == 'deleted' ) {
         // ToDo: Decide what to do about deleted records
-      }
-      else {
-        cache.onPackageChange(source_name, json_package_description)
+      } else {
+        if (editStatus != 'approved') {
+          log.info("Ignoring Package '${package_name} because editStatus=='${editStatus}' (required: 'approved')")
+        } else if (listStatus != 'checked') {
+          log.info("Ignoring Package '${package_name} because listStatus=='${listStatus}' (required: 'checked')")
+        } else {
+          cache.onPackageChange(source_name, json_package_description)
+        }
       }
 
       if ( datestamp > result.new_cursor ) {
