@@ -133,9 +133,9 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
         // ToDo: Decide what to do about deleted records
       } else {
         if (editStatus != 'approved') {
-          log.info("Ignoring Package '${package_name} because editStatus=='${editStatus}' (required: 'approved')")
+          log.info("Ignoring Package '${package_name}' because editStatus=='${editStatus}' (required: 'approved')")
         } else if (listStatus != 'checked') {
-          log.info("Ignoring Package '${package_name} because listStatus=='${listStatus}' (required: 'checked')")
+          log.info("Ignoring Package '${package_name}' because listStatus=='${listStatus}' (required: 'checked')")
         } else {
           cache.onPackageChange(source_name, json_package_description)
         }
