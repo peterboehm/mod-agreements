@@ -132,10 +132,10 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
       if ( json_package_description.header.status == 'deleted' ) {
         // ToDo: Decide what to do about deleted records
       } else {
-        if (editStatus != 'approved') {
-          log.info("Ignoring Package '${package_name}' because editStatus=='${editStatus}' (required: 'approved')")
-        } else if (listStatus != 'checked') {
-          log.info("Ignoring Package '${package_name}' because listStatus=='${listStatus}' (required: 'checked')")
+        if (editStatus != 'Approved') {
+          log.info("Ignoring Package '${package_name}' because editStatus=='${editStatus}' (required: 'Approved')")
+        } else if (listStatus != 'Checked') {
+          log.info("Ignoring Package '${package_name}' because listStatus=='${listStatus}' (required: 'Checked')")
         } else {
           cache.onPackageChange(source_name, json_package_description)
         }
@@ -175,11 +175,11 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
       def package_name = package_record.name?.text()
       def package_shortcode = package_record.shortcode?.text()
       def nominal_provider = package_record.nominalProvider?.name?.text()
-
+      def package_status = package_record.status?.text()
 
       result = [
         header:[
-          status: xml_gokb_record?.header?.status?.text(),
+          status: package_status,
           availability:[
             type: 'general'
           ],
@@ -192,6 +192,7 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
         ],
         packageContents: []
       ]
+      log.debug("result=${result}")
 
       package_record.TIPPs?.TIPP.each { tipp_entry ->
 

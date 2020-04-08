@@ -71,7 +71,7 @@ class PackageIngestService {
       // ERM caches many remote KB sources in it's local package inventory
       // Look up which remote kb via the name
       RemoteKB kb = RemoteKB.findByName(remotekbname)
-      
+
       if (!kb) {
        kb = new RemoteKB( name:remotekbname,
                           rectype: new Long(1),
@@ -98,8 +98,9 @@ class PackageIngestService {
       }
 
       if ( pkg == null ) {
-        log.debug("package_data.header.packageStatus = ${package_data.header.packageStatus} for package '${package_data.header.packageName}'")
-        if (package_data.header.packageStatus == 'current' || package_data.header.packageStatus == 'expected') {
+//        log.debug("package_data.header.status = ${package_data.header.status} for package '${package_data.header.packageName}'")
+//        log.debug("package_data.header = ${package_data.header} for package '${package_data.header.packageName}'")
+        if (package_data.header.status == 'Current' || package_data.header.status == 'Expected') {
           pkg = new Pkg(
                 name: package_data.header.packageName,
                source: package_data.header.packageSource,
@@ -107,7 +108,7 @@ class PackageIngestService {
              remoteKb: kb,
                vendor: vendor).save(flush:true, failOnError:true)
         } else {
-          log.debug("Not adding package '${package_data.header.packageName}' because packageStatus '${package_data.header.packageStatus}' doesn't match 'current' or 'expected'")
+          log.debug("Not adding package '${package_data.header.packageName}' (${package_data.header.packageSlug}) because status '${package_data.header.status}' doesn't match 'Current' or 'Expected'")
         }
       }
       result.packageId = pkg.id
