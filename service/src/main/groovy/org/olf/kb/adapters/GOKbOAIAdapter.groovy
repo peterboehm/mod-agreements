@@ -50,7 +50,7 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
     while ( found_records ) {
 
 
-      log.debug("** GET https://gokbt.gbv.de/gokb/oai/index/packages ${query_params}")
+      log.debug("** GET ${base_url} ${query_params}")
 
       jpf_api.request(Method.GET) { req ->
         // uri.path=''

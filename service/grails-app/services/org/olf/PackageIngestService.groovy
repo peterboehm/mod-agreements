@@ -97,15 +97,18 @@ class PackageIngestService {
         log.warn('Package ingest - no provider information present')
       }
 
-      if ( pkg == null && (package_data.header.packageStatus == 'current' || package_data.header.packageStatus == 'expected') ) {
-        pkg = new Pkg(
-              name: package_data.header.packageName,
-             source: package_data.header.packageSource,
-          reference: package_data.header.packageSlug,
-           remoteKb: kb,
-             vendor: vendor).save(flush:true, failOnError:true)
-      } else if (pkg == null) {
-        log.debug("Not adding package '${package_data.header.packageName}' because packageStatus '${package_data.header.packageStatus}' doesn't match 'current' or 'expected'")
+      if ( pkg == null ) {
+        log.debug("package_data.header.packageStatus = ${package_data.header.packageStatus} for package '${package_data.header.packageName}'")
+        if (package_data.header.packageStatus == 'current' || package_data.header.packageStatus == 'expected') {
+          pkg = new Pkg(
+                name: package_data.header.packageName,
+               source: package_data.header.packageSource,
+            reference: package_data.header.packageSlug,
+             remoteKb: kb,
+               vendor: vendor).save(flush:true, failOnError:true)
+        } else {
+          log.debug("Not adding package '${package_data.header.packageName}' because packageStatus '${package_data.header.packageStatus}' doesn't match 'current' or 'expected'")
+        }
       }
       result.packageId = pkg.id
     }
