@@ -106,7 +106,7 @@ class PackageIngestService {
             remoteKb: kb,
             vendor: vendor).save(flush: true, failOnError: true)
         } else {
-          log.debug("Not adding package '${package_data.header.packageName}' (${package_data.header.packageSlug}) because status '${package_data.header.status}' doesn't match 'Current' or 'Expected'")
+          log.info("Not adding package '${package_data.header.packageName}' because status '${package_data.header.status}' doesn't match 'Current' or 'Expected'")
           skipPackage = true
           return
         }
