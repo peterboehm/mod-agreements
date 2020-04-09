@@ -192,7 +192,6 @@ public class GOKbOAIAdapter implements KBCacheUpdater, DataBinder {
         ],
         packageContents: []
       ]
-      log.debug("result=${result}")
 
       package_record.TIPPs?.TIPP.each { tipp_entry ->
 
