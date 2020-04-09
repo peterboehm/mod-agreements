@@ -74,10 +74,10 @@ class PackageIngestService {
       RemoteKB kb = RemoteKB.findByName(remotekbname)
 
       if (!kb) {
-        kb = new RemoteKB(name: remotekbname,
+        kb = new RemoteKB( name:remotekbname,
           rectype: new Long(1),
           active: Boolean.TRUE,
-          readonly: readOnly).save(flush: true, failOnError: true)
+          readonly:readOnly).save(flush:true, failOnError:true)
       }
 
       result.updateTime = System.currentTimeMillis()
@@ -88,12 +88,13 @@ class PackageIngestService {
       pkg = Pkg.findBySourceAndReference(package_data.header.packageSource, package_data.header.packageSlug)
 
       def vendor = null
-      if ((package_data.header?.packageProvider?.name != null) && (package_data.header?.packageProvider?.name.trim().length() > 0)) {
+      if ( ( package_data.header?.packageProvider?.name != null ) && ( package_data.header?.packageProvider?.name.trim().length() > 0 ) ) {
         log.debug("Package contains provider information: ${package_data.header?.packageProvider?.name} -- trying to match to an existing organisation.")
         vendor = dependentModuleProxyService.coordinateOrg(package_data.header?.packageProvider?.name)
         // reference has been removed at the request of the UI team
         // vendor.enrich(['reference':package_data.header?.packageProvider?.reference])
-      } else {
+      }
+      else {
         log.warn('Package ingest - no provider information present')
       }
 
@@ -104,7 +105,7 @@ class PackageIngestService {
             source: package_data.header.packageSource,
             reference: package_data.header.packageSlug,
             remoteKb: kb,
-            vendor: vendor).save(flush: true, failOnError: true)
+            vendor: vendor).save(flush:true, failOnError:true)
         } else {
           log.info("Not adding package '${package_data.header.packageName}' because status '${package_data.header.status}' doesn't match 'Current' or 'Expected'")
           skipPackage = true
