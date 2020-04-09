@@ -130,14 +130,14 @@ class PackageIngestService {
             // discussion to work out best way to handle.
             TitleInstance title = titleInstanceResolverService.resolve(pc)
 
-            if (title != null) {
+            if ( title != null ) {
 
               // log.debug("platform ${pc.platformUrl} ${pc.platformName} (item URL is ${pc.url})")
 
               // lets try and work out the platform for the item
               def platform_url_to_use = pc.platformUrl
 
-              if ((pc.platformUrl == null) && (pc.url != null)) {
+              if ( ( pc.platformUrl == null ) && ( pc.url != null ) ) {
                 // No platform URL, but a URL for the title. Parse the URL and generate a platform URL
                 def parsed_url = new java.net.URL(pc.url)
                 platform_url_to_use = "${parsed_url.getProtocol()}://${parsed_url.getHost()}"
@@ -146,38 +146,39 @@ class PackageIngestService {
               Platform platform = Platform.resolve(platform_url_to_use, pc.platformName)
               // log.debug("Platform: ${platform}")
 
-              if (platform == null && PROXY_MISSING_PLATFORM) {
+              if ( platform == null && PROXY_MISSING_PLATFORM ) {
                 platform = Platform.resolve('http://localhost.localdomain', 'This platform entry is used for error cases')
               }
 
-              if (platform != null) {
+              if ( platform != null ) {
 
                 // See if we already have a title platform record for the presence of this title on this platform
                 PlatformTitleInstance pti = PlatformTitleInstance.findByTitleInstanceAndPlatform(title, platform)
 
-                if (pti == null)
-                  pti = new PlatformTitleInstance(titleInstance: title,
-                    platform: platform,
-                    url: pc.url).save(flush: true, failOnError: true)
+                if ( pti == null )
+                  pti = new PlatformTitleInstance(titleInstance:title,
+                    platform:platform,
+                    url:pc.url).save(flush:true, failOnError:true)
 
 
                 // Lookup or create a package content item record for this title on this platform in this package
                 // We only check for currently live pci records, as titles can come and go from the package.
                 // N.B. addedTimestamp removedTimestamp lastSeenTimestamp
                 def pci_qr = PackageContentItem.executeQuery('select pci from PackageContentItem as pci where pci.pti = :pti and pci.pkg.id = :pkg and pci.removedTimestamp is null',
-                  [pti: pti, pkg: result.packageId])
+                  [pti:pti, pkg:result.packageId])
                 PackageContentItem pci = pci_qr.size() == 1 ? pci_qr.get(0) : null;
 
                 boolean isUpdate = false
                 boolean isNew = false
-                if (pci == null) {
+                if ( pci == null ) {
                   log.debug("Record ${result.titleCount} - Create new package content item")
                   pci = new PackageContentItem(
-                    pti: pti,
-                    pkg: Pkg.get(result.packageId),
-                    addedTimestamp: result.updateTime)
+                    pti:pti,
+                    pkg:Pkg.get(result.packageId),
+                    addedTimestamp:result.updateTime)
                   isNew = true
-                } else {
+                }
+                else {
                   // Note that we have seen the package content item now - so we don't delete it at the end.
                   log.debug("Record ${result.titleCount} - Update package content item (${pci.id})")
                   isUpdate = true
@@ -195,7 +196,7 @@ class PackageIngestService {
 
                 // ensure that accessStart is earlier than accessEnd, otherwise stop processing the current item
                 if (pci.accessStart != null && pci.accessEnd != null) {
-                  if (pci.accessStart > pci.accessEnd) {
+                  if (pci.accessStart > pci.accessEnd ) {
                     log.error("accessStart date cannot be after accessEnd date for title: ${title} in package: ${pkg.name}")
                     return
                   }
@@ -234,11 +235,11 @@ class PackageIngestService {
                 // If the row has a coverage statement, check that the range of coverage we know about for this title on this platform
                 // extends to include the supplied information. It is a contract with the KB that we assume this is correct info.
                 // We store this generally for the title on the platform, and specifically for this title in this package on this platform.
-                if (pc.coverage) {
+                if ( pc.coverage ) {
 
                   // We define coverage to be a list in the exchange format, but sometimes it comes just as a JSON map. Convert that
                   // to the list of maps that coverageService.extend expects
-                  Iterable<CoverageStatementSchema> cov = pc.coverage instanceof Iterable ? pc.coverage : [pc.coverage]
+                  Iterable<CoverageStatementSchema> cov = pc.coverage instanceof Iterable ? pc.coverage : [ pc.coverage ]
 
                   coverageService.extend(pti, cov)
                   coverageService.extend(pci, cov)
@@ -246,19 +247,21 @@ class PackageIngestService {
                 }
 
                 // Save needed either way
-                pci.save(flush: true, failOnError: true)
-              } else {
+                pci.save(flush:true, failOnError:true)
+              }
+              else {
                 String message = "Skipping ${pc.title}. Unable to identify platform from ${platform_url_to_use} and ${pc.platformName}"
                 log.error(message)
               }
-            } else {
+            }
+            else {
               String message = "Skipping ${pc.title}. Unable to resolve title from ${pc.title} with identifiers ${pc.instanceIdentifiers}"
               log.error(message)
             }
           }
-        } catch (Exception e) {
+        } catch ( Exception e ) {
           String message = "Skipping ${pc.title}. System error: ${e.message}"
-          log.error(message, e)
+          log.error(message,e)
         }
 
         // {
@@ -286,12 +289,12 @@ class PackageIngestService {
         //   "coverageNote": null
         //   }
         result.titleCount++
-        result.averageTimePerTitle = (System.currentTimeMillis() - result.startTime) / result.titleCount
-        if (result.titleCount % 100 == 0) {
-          log.debug("Processed ${result.titleCount} titles, average per title: ${result.averageTimePerTitle}")
+        result.averageTimePerTitle=(System.currentTimeMillis()-result.startTime)/result.titleCount
+        if ( result.titleCount % 100 == 0 ) {
+          log.debug ("Processed ${result.titleCount} titles, average per title: ${result.averageTimePerTitle}")
         }
       }
-      def finishedTime = (System.currentTimeMillis() - result.startTime) / 1000
+      def finishedTime = (System.currentTimeMillis()-result.startTime)/1000
 
       // At the end - Any PCIs that are currently live (Don't have a removedTimestamp) but whos lastSeenTimestamp is < result.updateTime
       // were not found on this run, and have been removed. We *may* introduce some extra checks here - like 3 times or a time delay, but for now,
@@ -302,13 +305,13 @@ class PackageIngestService {
       PackageContentItem.withNewTransaction { status ->
 
         PackageContentItem.executeQuery('select pci from PackageContentItem as pci where pci.pkg = :pkg and pci.lastSeenTimestamp < :updateTime and pci.removedTimestamp is null',
-          [pkg: pkg, updateTime: result.updateTime]).each { removal_candidate ->
+          [pkg:pkg, updateTime:result.updateTime]).each { removal_candidate ->
           try {
             log.debug("Removal candidate: pci.id #${removal_candidate.id} (Last seen ${removal_candidate.lastSeenTimestamp}, thisUpdate ${result.updateTime}) -- Set removed")
             removal_candidate.removedTimestamp = result.updateTime
-            removal_candidate.save(flush: true, failOnError: true)
-          } catch (Exception e) {
-            log.error("Problem removing ${removal_candidate} in package load", e)
+            removal_candidate.save(flush:true, failOnError:true)
+          } catch ( Exception e ) {
+            log.error("Problem removing ${removal_candidate} in package load",e)
           }
           result.removedTitles++
         }
@@ -317,26 +320,26 @@ class PackageIngestService {
       // Need to pause long enough so that the timestamps are different
       TimeUnit.MILLISECONDS.sleep(1)
       if (result.titleCount > 0) {
-        log.info("Processed ${result.titleCount} titles in ${finishedTime} seconds (${finishedTime / result.titleCount} average)")
+        log.info ("Processed ${result.titleCount} titles in ${finishedTime} seconds (${finishedTime/result.titleCount} average)")
         TimeUnit.MILLISECONDS.sleep(1)
-        log.info("Added ${result.newTitles} titles")
+        log.info ("Added ${result.newTitles} titles")
         TimeUnit.MILLISECONDS.sleep(1)
-        log.info("Updated ${result.updatedTitles} titles")
+        log.info ("Updated ${result.updatedTitles} titles")
         TimeUnit.MILLISECONDS.sleep(1)
-        log.info("Removed ${result.removedTitles} titles")
-        log.info("Updated accessStart on ${result.updatedAccessStart} title(s)")
-        log.info("Updated accessEnd on ${result.updatedAccessEnd} title(s)")
+        log.info ("Removed ${result.removedTitles} titles")
+        log.info ("Updated accessStart on ${result.updatedAccessStart} title(s)")
+        log.info ("Updated accessEnd on ${result.updatedAccessEnd} title(s)")
 
         // Log the counts too.
         for (final String change : countChanges) {
           if (result[change]) {
             TimeUnit.MILLISECONDS.sleep(1)
-            log.info("Changed ${GrailsNameUtils.getNaturalName(change).toLowerCase()} on ${result[change]} titles")
+            log.info ("Changed ${GrailsNameUtils.getNaturalName(change).toLowerCase()} on ${result[change]} titles")
           }
         }
       } else {
         if (result.titleCount > 0) {
-          log.info("No titles to process")
+          log.info ("No titles to process")
         }
       }
 
