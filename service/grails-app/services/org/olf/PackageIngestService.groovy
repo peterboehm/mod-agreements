@@ -56,13 +56,13 @@ class PackageIngestService {
   public Map upsertPackage(PackageSchema package_data, String remotekbname, boolean readOnly=false) {
 
     def result = [
-      startTime         : System.currentTimeMillis(),
-      titleCount        : 0,
-      newTitles         : 0,
-      removedTitles     : 0,
-      updatedTitles     : 0,
+      startTime: System.currentTimeMillis(),
+      titleCount: 0,
+      newTitles: 0,
+      removedTitles: 0,
+      updatedTitles: 0,
       updatedAccessStart: 0,
-      updatedAccessEnd  : 0,
+      updatedAccessEnd: 0,
     ]
 
     Pkg pkg = null
