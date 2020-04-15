@@ -5,6 +5,7 @@ import org.olf.dataimport.internal.PackageSchema.ContentItemSchema
 import org.olf.dataimport.internal.PackageSchema.CoverageStatementSchema
 import org.olf.general.jobs.JobRunnerService
 import org.olf.general.jobs.LogEntry
+import org.olf.kb.Embargo
 import org.olf.kb.PackageContentItem
 import org.olf.kb.Pkg
 import org.olf.kb.Platform
@@ -131,14 +132,14 @@ class PackageIngestService {
             // discussion to work out best way to handle.
             TitleInstance title = titleInstanceResolverService.resolve(pc)
 
-            if ( title != null ) {
+            if (title != null) {
 
               // log.debug("platform ${pc.platformUrl} ${pc.platformName} (item URL is ${pc.url})")
 
               // lets try and work out the platform for the item
               def platform_url_to_use = pc.platformUrl
 
-              if ( ( pc.platformUrl == null ) && ( pc.url != null ) ) {
+              if ((pc.platformUrl == null) && (pc.url != null)) {
                 // No platform URL, but a URL for the title. Parse the URL and generate a platform URL
                 def parsed_url = new java.net.URL(pc.url)
                 platform_url_to_use = "${parsed_url.getProtocol()}://${parsed_url.getHost()}"
@@ -147,46 +148,45 @@ class PackageIngestService {
               Platform platform = Platform.resolve(platform_url_to_use, pc.platformName)
               // log.debug("Platform: ${platform}")
 
-              if ( platform == null && PROXY_MISSING_PLATFORM ) {
+              if (platform == null && PROXY_MISSING_PLATFORM) {
                 platform = Platform.resolve('http://localhost.localdomain', 'This platform entry is used for error cases')
               }
 
-              if ( platform != null ) {
+              if (platform != null) {
 
                 // See if we already have a title platform record for the presence of this title on this platform
                 PlatformTitleInstance pti = PlatformTitleInstance.findByTitleInstanceAndPlatform(title, platform)
 
-                if ( pti == null )
-                  pti = new PlatformTitleInstance(titleInstance:title,
-                    platform:platform,
-                    url:pc.url).save(flush:true, failOnError:true)
+                if (pti == null)
+                  pti = new PlatformTitleInstance(titleInstance: title,
+                    platform: platform,
+                    url: pc.url).save(flush: true, failOnError: true)
 
 
                 // Lookup or create a package content item record for this title on this platform in this package
                 // We only check for currently live pci records, as titles can come and go from the package.
                 // N.B. addedTimestamp removedTimestamp lastSeenTimestamp
                 def pci_qr = PackageContentItem.executeQuery('select pci from PackageContentItem as pci where pci.pti = :pti and pci.pkg.id = :pkg and pci.removedTimestamp is null',
-                  [pti:pti, pkg:result.packageId])
+                  [pti: pti, pkg: result.packageId])
                 PackageContentItem pci = pci_qr.size() == 1 ? pci_qr.get(0) : null;
 
                 boolean isUpdate = false
                 boolean isNew = false
-                if ( pci == null ) {
+                if (pci == null) {
                   log.debug("Record ${result.titleCount} - Create new package content item")
                   pci = new PackageContentItem(
-                    pti:pti,
-                    pkg:Pkg.get(result.packageId),
-                    addedTimestamp:result.updateTime)
+                    pti: pti,
+                    pkg: Pkg.get(result.packageId),
+                    addedTimestamp: result.updateTime)
                   isNew = true
-                }
-                else {
+                } else {
                   // Note that we have seen the package content item now - so we don't delete it at the end.
                   log.debug("Record ${result.titleCount} - Update package content item (${pci.id})")
                   isUpdate = true
                 }
 
                 String embStr = pc.embargo?.trim()
-
+          
                 // Pre attempt to parse. And log error.
                 Embargo emb = null
                 if (embStr) {
@@ -209,7 +209,7 @@ class PackageIngestService {
 
                 // ensure that accessStart is earlier than accessEnd, otherwise stop processing the current item
                 if (pci.accessStart != null && pci.accessEnd != null) {
-                  if (pci.accessStart > pci.accessEnd ) {
+                  if (pci.accessStart > pci.accessEnd) {
                     log.error("accessStart date cannot be after accessEnd date for title: ${title} in package: ${pkg.name}")
                     return
                   }
@@ -248,11 +248,11 @@ class PackageIngestService {
                 // If the row has a coverage statement, check that the range of coverage we know about for this title on this platform
                 // extends to include the supplied information. It is a contract with the KB that we assume this is correct info.
                 // We store this generally for the title on the platform, and specifically for this title in this package on this platform.
-                if ( pc.coverage ) {
+                if (pc.coverage) {
 
                   // We define coverage to be a list in the exchange format, but sometimes it comes just as a JSON map. Convert that
                   // to the list of maps that coverageService.extend expects
-                  Iterable<CoverageStatementSchema> cov = pc.coverage instanceof Iterable ? pc.coverage : [ pc.coverage ]
+                  Iterable<CoverageStatementSchema> cov = pc.coverage instanceof Iterable ? pc.coverage : [pc.coverage]
 
                   coverageService.extend(pti, cov)
                   coverageService.extend(pci, cov)
@@ -260,27 +260,25 @@ class PackageIngestService {
                 }
 
                 // Save needed either way
-                pci.save(flush:true, failOnError:true)
-              }
-              else {
+                pci.save(flush: true, failOnError: true)
+              } else {
                 String message = "Skipping ${pc.title}. Unable to identify platform from ${platform_url_to_use} and ${pc.platformName}"
                 log.error(message)
               }
-            }
-            else {
+            } else {
               String message = "Skipping ${pc.title}. Unable to resolve title from ${pc.title} with identifiers ${pc.instanceIdentifiers}"
               log.error(message)
             }
           }
-        } catch ( Exception e ) {
+        } catch (Exception e) {
           String message = "Skipping ${pc.title}. System error: ${e.message}"
-          log.error(message,e)
+          log.error(message, e)
         }
-        result.titleCount++
-        result.averageTimePerTitle=(System.currentTimeMillis()-result.startTime)/result.titleCount
-        if ( result.titleCount % 100 == 0 ) {
-          log.debug ("Processed ${result.titleCount} titles, average per title: ${result.averageTimePerTitle}")
-        }
+      }
+      result.titleCount++
+      result.averageTimePerTitle=(System.currentTimeMillis()-result.startTime)/result.titleCount
+      if ( result.titleCount % 100 == 0 ) {
+        log.debug ("Processed ${result.titleCount} titles, average per title: ${result.averageTimePerTitle}")
       }
       def finishedTime = (System.currentTimeMillis()-result.startTime)/1000
 
