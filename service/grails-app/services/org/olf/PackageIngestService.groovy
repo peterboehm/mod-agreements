@@ -117,11 +117,9 @@ class PackageIngestService {
     }
 
     if (skipPackage) {
-      MDC.put('subDiscriminator', "Content item #${index + 1}")
       return
 
     } else {
-
       package_data.packageContents.eachWithIndex { ContentItemSchema pc, int index ->
         MDC.put('subDiscriminator', "Content item #${index + 1}")
 
