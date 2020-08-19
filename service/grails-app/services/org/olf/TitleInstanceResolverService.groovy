@@ -18,6 +18,7 @@ import groovy.json.*
 /**
  * This service works at the module level, it's often called without a tenant context.
  */
+@Transactional
 class TitleInstanceResolverService implements DataBinder{
 
   private static final float MATCH_THRESHOLD = 0.775f
@@ -83,7 +84,6 @@ class TitleInstanceResolverService implements DataBinder{
     TitleInstance result = null;
 
     List<TitleInstance> candidate_list = classOneMatch(citation.instanceIdentifiers);
-    int num_class_one_identifiers = countClassOneIDs(citation.instanceIdentifiers);
     int num_matches = candidate_list.size()
     if ( num_matches > 1 ) {
       log.debug("Class one match found multiple titles:: ${candidate_list}");
@@ -91,6 +91,7 @@ class TitleInstanceResolverService implements DataBinder{
 
     // We weren't able to match directly on an identifier for this instance - see if we have an identifier
     // for a sibling instance we can use to narrow down the list.
+    int num_class_one_identifiers = countClassOneIDs(citation.instanceIdentifiers);
     if ( num_matches == 0 ) {
       candidate_list = siblingMatch(citation)
       num_matches = candidate_list.size()
@@ -316,6 +317,34 @@ class TitleInstanceResolverService implements DataBinder{
     log.debug("Checking for enrichment of Title Instance: ${title} :: trusted: ${trustedSourceTI}")
     if (trustedSourceTI == true) {
       log.debug("Trusted source for TI enrichment--enriching")
+
+      if (title.publicationType.value != citation.instanceMedia) {
+        title.publicationTypeFromString = citation.instanceMedia
+        switch(citation.instanceMedia) {
+          case 'book':
+            title.typeFromString = 'monograph'
+            break
+          case 'journal':
+            title.typeFromString = 'serial'
+            break
+          case 'monograph':
+            title.typeFromString = 'monograph'
+            break
+          case 'serial':
+            title.typeFromString = 'serial'
+            break
+          default:
+            /**
+            ERM-987: ... check for the existence of a coverage statement.
+            If a coverage statement exists then type == "serial", otherwise "monograph"
+            **/
+            if ( citation.coverage ) {
+              title.typeFromString = 'serial'
+            } else {
+              title.typeFromString = 'monograph'
+            }
+        }
+      }
 
       if (title.name != citation.title) {
         title.name = citation.title
