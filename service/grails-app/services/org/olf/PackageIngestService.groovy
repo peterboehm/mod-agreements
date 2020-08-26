@@ -362,6 +362,7 @@ class PackageIngestService implements DataBinder {
       }
     }
 
+    MDC.clear()
     return result
   }
 }

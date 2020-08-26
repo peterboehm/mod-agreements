@@ -313,6 +313,7 @@ class ImportService implements DataBinder {
       log.error("Package contents empty, skipping package creation")
     }
     
+    MDC.clear()
     return (packageImported)
   }
   
