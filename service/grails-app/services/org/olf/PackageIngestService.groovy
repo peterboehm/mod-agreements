@@ -198,7 +198,7 @@ class PackageIngestService implements DataBinder {
                 boolean isNew = false
                 if ( pci == null ) {
                   log.debug("Record ${result.titleCount} - Create new package content item")
-                  MDC.put('recordNumber', result.titleCount.toString())
+                  MDC.put('recordNumber', result.titleCount+1.toString())
                   pci = new PackageContentItem(
                     pti:pti,
                     pkg:Pkg.get(result.packageId),
@@ -336,6 +336,7 @@ class PackageIngestService implements DataBinder {
       }
 
       // Need to pause long enough so that the timestamps are different
+      MDC.clear()
       TimeUnit.MILLISECONDS.sleep(1)
       if (result.titleCount > 0) {
         log.info ("Processed ${result.titleCount} titles in ${finishedTime} seconds (${finishedTime/result.titleCount} average)")
