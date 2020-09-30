@@ -336,7 +336,7 @@ class PackageIngestService implements DataBinder {
       }
 
       // Need to pause long enough so that the timestamps are different
-      MDC.clear()
+      MDC.remove('recordNumber')
       TimeUnit.MILLISECONDS.sleep(1)
       if (result.titleCount > 0) {
         log.info ("Processed ${result.titleCount} titles in ${finishedTime} seconds (${finishedTime/result.titleCount} average)")
