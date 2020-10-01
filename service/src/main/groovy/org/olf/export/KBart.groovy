@@ -185,7 +185,7 @@ public class KBart implements Serializable {
   static String[] header() {
     List<String> header = new ArrayList<String>()
     KBart.class.getDeclaredFields().each {
-      if (it.modifiers == java.lang.reflect.Modifier.PUBLIC) {
+      if (it.modifiers == java.lang.reflect.Modifier.PRIVATE) {
         header.add(it.name)
       }
     }
