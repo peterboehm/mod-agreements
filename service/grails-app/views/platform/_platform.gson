@@ -1,0 +1,7 @@
+import org.olf.kb.Platform
+
+import groovy.transform.*
+
+@Field
+Platform platform
+json g.render(platform)
