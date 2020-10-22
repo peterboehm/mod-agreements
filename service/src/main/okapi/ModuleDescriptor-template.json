@@ -319,7 +319,7 @@
         {
           "methods": ["GET"],
           "pathPattern": "/erm/platforms",
-          "permissionsRequired": [ "erm.platform.collection.get" ]
+          "permissionsRequired": [ "erm.platforms.collection.get" ]
         },{
           "methods": ["GET"],
           "pathPattern": "/erm/platforms/{id}",
