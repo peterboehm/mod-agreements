@@ -4,4 +4,4 @@ import groovy.transform.*
 
 @Field
 Platform platform
-json g.render(platform)
+json g.render(platform, [includes: ['id', 'name', 'localCode']])
