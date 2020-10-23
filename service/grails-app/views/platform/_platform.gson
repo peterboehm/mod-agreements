@@ -4,6 +4,12 @@ import groovy.transform.*
 
 @Field
 Platform platform
-json g.render(platform, [expand: ['locators']]) {  //, includes: ['id', 'name', 'localCode']
-//  'locators' {'locators' platform.locators.domainName}    
+json g.render(platform, [excludes: ['locators']]) {
+    def l = platform.locators.collect {
+        [
+            id: it.id,
+            domainName: it.domainName
+        ]
+    }
+  'locators' l    
 }
